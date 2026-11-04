@@ -1,0 +1,381 @@
+<!doctype html>
+<html lang="it">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Villa Castellani · Un borgo, un giorno intero</title>
+<meta name="description" content="Villa Castellani, Mogliano (MC): il giorno del matrimonio in un borgo sulle colline marchigiane, dal rito civile valido in villa alla festa a bordo piscina. Fino a 300 invitati, 30 camere, menù da 90 €.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;1,300;1,400&family=Inter:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+:root{
+  --fg:#15171C; --fgm:rgba(21,23,28,.72);
+  --ivory:#F6F1E8; --gold:#C4A16A; --gold2:#5E6B45; --ink:#15171C; --mist:rgba(246,241,232,.72);
+  --serif:'Cormorant Garamond',Georgia,serif; --sans:'Inter',system-ui,sans-serif;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:auto}
+body{background:#0e1016;color:var(--ivory);font-family:var(--sans);font-weight:300;overflow-x:hidden;-webkit-font-smoothing:antialiased}
+canvas#gl{position:fixed;inset:0;width:100%;height:100%;display:block;z-index:0}
+.scroller{position:relative;z-index:1;height:calc(var(--pages,10) * 100vh);pointer-events:none}
+.ui{position:fixed;inset:0;z-index:2;pointer-events:none}
+.ui *{pointer-events:auto}
+
+/* top bar */
+.bar{position:fixed;top:0;left:0;right:0;display:flex;align-items:center;justify-content:space-between;padding:22px clamp(18px,4vw,48px);z-index:5;mix-blend-mode:normal}
+.brand{font-family:var(--serif);font-size:22px;letter-spacing:.02em;color:var(--fg);text-decoration:none;line-height:1}
+.brand small{display:block;font-family:var(--sans);font-size:9px;letter-spacing:.32em;text-transform:uppercase;opacity:.7;margin-top:6px}
+.clock{font-family:var(--serif);font-size:clamp(26px,3vw,40px);font-weight:300;letter-spacing:.04em;font-variant-numeric:tabular-nums;color:var(--fg)}
+.clock small{display:block;font-family:var(--sans);font-size:9px;letter-spacing:.32em;text-transform:uppercase;opacity:.65;text-align:right;margin-top:2px}
+.cta{font-size:10px;letter-spacing:.3em;text-transform:uppercase;color:var(--ink);background:var(--gold);padding:14px 20px;border-radius:2px;text-decoration:none;white-space:nowrap}
+@media (max-width:720px){.cta{display:none}.bar{padding:16px 18px}}
+
+/* progress rail */
+.rail{position:fixed;right:clamp(14px,2.4vw,34px);top:50%;transform:translateY(-50%);display:flex;flex-direction:column;gap:18px;z-index:5}
+.rail button{appearance:none;border:0;background:none;cursor:pointer;display:flex;align-items:center;gap:10px;color:var(--fg);opacity:.45;transition:opacity .4s;padding:0}
+.rail button.on{opacity:1}
+.rail i{width:7px;height:7px;border-radius:50%;background:currentColor;display:block;transition:transform .4s}
+.rail button.on i{transform:scale(1.7);background:var(--gold)}
+.rail span{font-size:9px;letter-spacing:.28em;text-transform:uppercase;display:none}
+@media (min-width:980px){.rail span{display:block;order:-1;opacity:0;transform:translateX(6px);transition:all .4s}.rail button.on span{opacity:1;transform:none}}
+
+/* hero */
+.hero{position:fixed;inset:0;display:grid;place-items:start center;text-align:center;padding:16vh 20px 0;transition:opacity .3s;color:var(--fg)}
+@media (max-width:720px){.hero{padding-top:13vh}}
+.hero .eyebrow{font-family:var(--serif);font-style:italic;font-size:clamp(18px,2.2vw,26px);color:var(--gold);margin-bottom:10px;opacity:.95}
+.hero h1{font-family:var(--serif);font-weight:300;font-size:clamp(46px,9vw,124px);line-height:.95;letter-spacing:-.01em;perspective:900px}
+.hero h1 .w{display:inline-block;white-space:nowrap}.hero h1 .w span{display:inline-block;transform-style:preserve-3d;will-change:transform,opacity}
+@media (max-width:720px){.hero h1{font-size:40px}}
+.hero p{max-width:560px;margin:26px auto 0;font-size:clamp(14px,1.3vw,17px);line-height:1.7;color:var(--fgm)}
+.hero .hint{margin-top:36px;font-size:9px;letter-spacing:.34em;text-transform:uppercase;opacity:.65;display:flex;flex-direction:column;align-items:center;gap:14px}
+.hero .hint i{width:1px;height:46px;background:linear-gradient(var(--gold),transparent);display:block;animation:drop 2.2s ease-in-out infinite}
+@keyframes drop{0%{transform:scaleY(0);transform-origin:top}50%{transform:scaleY(1);transform-origin:top}51%{transform-origin:bottom}100%{transform:scaleY(0);transform-origin:bottom}}
+.drag{position:fixed;left:50%;bottom:26px;transform:translateX(-50%);font-size:9px;letter-spacing:.3em;text-transform:uppercase;opacity:.6;color:var(--fg);display:flex;gap:12px;align-items:center}
+.drag:before,.drag:after{content:"";width:34px;height:1px;background:currentColor;opacity:.6}
+
+/* stations */
+.st{position:fixed;left:clamp(18px,6vw,96px);bottom:clamp(60px,12vh,140px);max-width:520px;color:var(--fg);text-shadow:0 1px 18px rgba(0,0,0,.18);opacity:0;transform:translateY(24px);transition:opacity .5s,transform .7s cubic-bezier(.2,.7,.2,1);pointer-events:none}
+.st.on{opacity:1;transform:none;pointer-events:auto}
+.st .k{display:flex;align-items:baseline;gap:14px;margin-bottom:14px}
+.st .k b{font-family:var(--serif);font-weight:300;font-size:clamp(34px,4.4vw,62px);letter-spacing:.02em;font-variant-numeric:tabular-nums}
+.st .k em{font-family:var(--serif);font-style:italic;font-size:clamp(18px,2vw,26px);color:var(--gold)}
+.st h2{font-family:var(--serif);font-weight:300;font-size:clamp(28px,3.6vw,52px);line-height:1.05;margin-bottom:14px}
+.st p{font-size:clamp(14px,1.15vw,16px);line-height:1.7;color:var(--fgm);max-width:460px}
+.st .n{position:absolute;right:-10px;top:-54px;font-family:var(--serif);font-size:120px;line-height:1;color:transparent;-webkit-text-stroke:1px var(--fgm);opacity:.35;pointer-events:none}
+@media (max-width:720px){.st{left:18px;right:18px;bottom:40px;max-width:none}.st .n{display:none}.rail{display:none}.st h2{font-size:26px}.st p{font-size:13px}}
+.st.right{left:auto;right:clamp(60px,8vw,120px)}
+@media (max-width:980px){.st.right{right:18px}}
+
+/* chapter line (top-left, under bar) */
+.chapter{position:fixed;left:clamp(18px,4vw,48px);top:92px;color:var(--fg);font-size:9px;letter-spacing:.34em;text-transform:uppercase;opacity:0;transition:opacity .5s;display:flex;gap:14px;align-items:center}
+.chapter.on{opacity:.8}
+.chapter:before{content:"";width:28px;height:1px;background:var(--gold)}
+
+/* invitation / form */
+.invite{position:fixed;inset:0;display:grid;place-items:center;padding:90px 16px 24px;opacity:0;pointer-events:none;transition:opacity .6s;overflow:auto}
+.invite.on{opacity:1;pointer-events:auto}
+.card{width:min(680px,100%);background:rgba(246,241,232,.96);color:var(--ink);padding:clamp(28px,4vw,52px);border-radius:3px;box-shadow:0 40px 120px rgba(0,0,0,.5);position:relative;transform:translateY(18px);transition:transform .8s cubic-bezier(.2,.7,.2,1)}
+.invite.on .card{transform:none}
+.card:before{content:"";position:absolute;inset:10px;border:1px solid rgba(21,23,28,.18);pointer-events:none}
+.card .eyebrow{font-family:var(--serif);font-style:italic;color:var(--gold2);font-size:20px}
+.card h3{font-family:var(--serif);font-weight:300;font-size:clamp(30px,4vw,46px);line-height:1.05;margin:6px 0 10px}
+.card p{font-size:14px;line-height:1.65;color:rgba(21,23,28,.72);max-width:520px}
+.card .pq{margin:16px 0 0;padding:12px 0 0 16px;border-left:2px solid var(--gold);font-family:var(--serif);font-style:italic;font-size:18px;line-height:1.35;color:rgba(21,23,28,.85)}
+.card .pq cite{display:block;font-family:var(--sans);font-style:normal;font-size:10px;letter-spacing:.2em;text-transform:uppercase;color:rgba(21,23,28,.55);margin-top:8px}
+@media (max-width:640px){.card .pq{font-size:15px}}
+.card form{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:22px}
+.card label{display:flex;flex-direction:column;gap:6px;font-size:9px;letter-spacing:.28em;text-transform:uppercase;color:rgba(21,23,28,.6)}
+.card input,.card select,.card textarea{font:inherit;font-size:15px;padding:12px 12px;border:1px solid rgba(21,23,28,.22);background:#fff;border-radius:2px;color:var(--ink)}
+.card textarea{min-height:88px;resize:vertical}
+.card .full{grid-column:1/-1}
+.card button{grid-column:1/-1;font:inherit;font-size:10px;letter-spacing:.3em;text-transform:uppercase;background:var(--ink);color:var(--ivory);border:0;padding:16px;border-radius:2px;cursor:pointer}
+.card .foot{grid-column:1/-1;font-size:12px;color:rgba(21,23,28,.6);text-align:center}
+@media (max-width:640px){.card form{grid-template-columns:1fr;gap:10px}.card{padding:24px 18px}.card textarea{min-height:64px}.card p{font-size:13px}}
+
+/* footer strip (shown at the very end under the card on mobile) */
+.credits{position:fixed;left:0;right:0;bottom:12px;text-align:center;font-size:10px;letter-spacing:.2em;text-transform:uppercase;opacity:0;transition:opacity .6s}
+.credits.on{opacity:.6}
+
+/* fallback */
+.fallback{display:none}
+body.nogl .loader,body.nogl canvas#gl,body.nogl .hero,body.nogl .st,body.nogl .rail,body.nogl .drag,body.nogl .chapter,body.nogl .invite,body.nogl .scroller{display:none!important}
+body.nogl .fallback{display:block;position:relative;z-index:1;padding:120px 20px 80px;max-width:900px;margin:0 auto}
+.fallback h1{font-family:var(--serif);font-weight:300;font-size:56px;margin-bottom:30px}
+.fallback figure{margin:0 0 40px}
+.fallback img{width:100%;height:auto;border-radius:3px}
+.fallback figcaption{margin-top:12px;font-family:var(--serif);font-size:24px}
+.fallback p{color:var(--mist);line-height:1.7;margin-top:8px}
+@media (prefers-reduced-motion:reduce){.hero .hint i{animation:none}}
+.loader{position:fixed;inset:0;z-index:20;background:#EDE4D3;display:grid;place-items:center;transition:opacity .8s;color:var(--ink)}
+.loader.off{opacity:0;pointer-events:none}
+.loader .t{font-family:var(--serif);font-size:30px;font-weight:300;letter-spacing:.04em;text-align:center}
+.loader .t small{display:block;font-family:var(--sans);font-size:9px;letter-spacing:.34em;text-transform:uppercase;margin-top:14px;opacity:.7}
+.loader .b{width:140px;height:1px;background:rgba(21,23,28,.18);margin:18px auto 0;overflow:hidden}.loader .b i{display:block;height:100%;width:0;background:var(--gold2);transition:width .3s}
+</style>
+</head>
+<body>
+<canvas id="gl" aria-hidden="true"></canvas>
+<div class="loader" id="loader"><div class="t">Villa Castellani<small>accendiamo il borgo</small><div class="b"><i id="loadbar"></i></div></div></div>
+<div class="scroller" id="scroller" aria-hidden="true"></div>
+
+<header class="bar">
+  <a class="brand" href="#top">Villa Castellani<small>Mogliano · colline di Macerata</small></a>
+  <div class="clock" aria-live="off"><span id="clock">16:00</span><small id="clockLabel">il pomeriggio</small></div>
+  <a class="cta" href="#invito" id="ctaTop">Chiedi la data</a>
+</header>
+
+<nav class="rail" aria-label="Capitoli" id="rail"></nav>
+
+<div class="ui">
+  <section class="hero" id="hero">
+    <div>
+      <div class="eyebrow">la location più recensita delle Marche</div>
+      <h1 id="title" aria-label="Un borgo, un giorno intero">Un borgo, un giorno intero</h1>
+      <p>Un borgo sulle colline di Macerata, ai margini della riserva dell'Abbadia di Fiastra. Qui il matrimonio non sta fermo in una sala: si cambia scenario con le ore. Scorrete e seguitelo.</p>
+      <div class="hint">Scorri per cominciare<i></i></div>
+    </div>
+  </section>
+  <div class="drag" id="drag">trascina per girare</div>
+
+  <div class="chapter" id="chapter"></div>
+
+  <article class="st" data-i="0"><span class="n">01</span><div class="k"><b>16:30</b><em>la cerimonia</em></div><h2>Il rito civile, valido, in villa</h2><p>Villa Castellani è sede di Casa Comunale: il sì civile si dice qui, tra il giardino all'italiana, il boschetto e l'anfiteatro, senza passare dal Comune. Vale anche per le coppie straniere.</p></article>
+  <article class="st right" data-i="1"><span class="n">02</span><div class="k"><b>17:30</b><em>l'aperitivo</em></div><h2>Scendete verso la piscina</h2><p>L'aperitivo si sposta sul prato della piscina, sotto l'anfiteatro: fino a 300 persone all'aperto. Cucina e pasticceria sono interne, e la brace dello show cooking si accende davanti agli ospiti.</p></article>
+  <article class="st" data-i="2"><span class="n">03</span><div class="k"><b>19:30</b><em>la cena</em></div><h2>Fuori, o nella Veranda</h2><p>D'estate la cena è in giardino sotto le luci. Se piove non si ridimensiona niente: la Sala Veranda ospita 300 invitati seduti, la Sala degli Stucchi 280.</p></article>
+  <article class="st right" data-i="3"><span class="n">04</span><div class="k"><b>23:00</b><em>la torta</em></div><h2>Sotto l'arco di siepe</h2><p>La torta arriva tra le fontane di scintille, davanti alla balaustra o sotto l'arco di siepe illuminato. Le colline intorno sono già buie.</p></article>
+  <article class="st" data-i="4"><span class="n">05</span><div class="k"><b>00:30</b><em>la festa</em></div><h2>A bordo piscina, poi a dormire qui</h2><p>La festa scende a bordo piscina. Poi nessuno guida: trenta camere e settanta posti letto, colazione il giorno dopo. Chi vuole prende tutto il borgo per il weekend.</p></article>
+
+
+  <section class="invite" id="invite" aria-labelledby="invTitle">
+    <div class="card" id="invito">
+      <div class="eyebrow">l'invito</div>
+      <h3 id="invTitle">Raccontateci il matrimonio, poi venite a percorrere il borgo.</h3>
+      <p>Scriveteci la data e quanti siete: vi richiamiamo per la visita. Ospitiamo circa 120 matrimoni l'anno, quindi le date di maggio e settembre vanno via presto.</p>
+      <blockquote class="pq">«È stata la nostra prima scelta: non abbiamo visto altri posti perché eravamo sicuri di fare la scelta giusta.»<cite>Laura · Matrimonio.com · oltre 430 recensioni, 4,9 su 5</cite></blockquote>
+
+      <form action="mailto:eventi@villacastellani.it" method="post" enctype="text/plain">
+        <label>I vostri nomi<input name="nomi" placeholder="Giulia e Marco" required></label>
+        <label>La data, anche indicativa<input name="data" type="month"></label>
+        <label>Invitati<select name="invitati"><option>Fino a 100</option><option selected>100 – 200</option><option>200 – 300</option><option>Non so ancora</option></select></label>
+        <label>Il rito<select name="rito"><option>Rito civile in villa</option><option>Rito simbolico all'aperto</option><option>In chiesa, poi in villa</option><option>Non so ancora</option></select></label>
+        <label class="full">Due righe su come lo immaginate<textarea name="msg" placeholder="In che mese, quanti siete, se gli invitati dormono in villa (30 camere)."></textarea></label>
+        <button type="submit">Chiedi la data</button>
+        <div class="foot">oppure 392 161 3647 · eventi@villacastellani.it · Contrada Acquevive 16, Mogliano (MC)</div>
+      </form>
+    </div>
+  </section>
+  <div class="credits" id="credits">© Villa Castellani · demo</div>
+</div>
+
+<!-- fallback without WebGL -->
+<div class="fallback">
+  <h1>Un borgo, un giorno intero</h1>
+  <figure><img src="media/ritocivile-960.jpg" alt=""><figcaption>16:30 · Il rito civile, valido, in villa</figcaption><p>Villa Castellani è sede di Casa Comunale: il sì civile si dice qui, tra il giardino all'italiana, il boschetto e l'anfiteatro, senza passare dal Comune. Vale anche per le coppie straniere.</p></figure>
+  <figure><img src="media/giardino-810.jpg" alt=""><figcaption>17:30 · Scendete verso la piscina</figcaption><p>L'aperitivo si sposta sul prato della piscina, sotto l'anfiteatro: fino a 300 persone all'aperto. Cucina e pasticceria sono interne, e la brace dello show cooking si accende davanti agli ospiti.</p></figure>
+  <figure><img src="media/veranda-960.jpg" alt=""><figcaption>19:30 · Fuori, o nella Veranda</figcaption><p>D'estate la cena è in giardino sotto le luci. Se piove non si ridimensiona niente: la Sala Veranda ospita 300 invitati seduti, la Sala degli Stucchi 280.</p></figure>
+  <figure><img src="media/archetto-960.jpg" alt=""><figcaption>23:00 · Sotto l'arco di siepe</figcaption><p>La torta arriva tra le fontane di scintille, davanti alla balaustra o sotto l'arco di siepe illuminato. Le colline intorno sono già buie.</p></figure>
+  <figure><img src="media/openbar-960.jpg" alt=""><figcaption>00:30 · A bordo piscina, poi a dormire qui</figcaption><p>La festa scende a bordo piscina. Poi nessuno guida: trenta camere e settanta posti letto, colazione il giorno dopo. Chi vuole prende tutto il borgo per il weekend.</p></figure>
+
+  <p>oppure 392 161 3647 · eventi@villacastellani.it · Contrada Acquevive 16, Mogliano (MC)</p>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<script>
+(function(){
+'use strict';
+var canvas=document.getElementById('gl');
+var hasGL=(function(){try{var c=document.createElement('canvas');return !!(window.WebGLRenderingContext&&(c.getContext('webgl')||c.getContext('experimental-webgl')))}catch(e){return false}})();
+if(!hasGL||typeof THREE==='undefined'){document.body.classList.add('nogl');return;}
+
+/* ---------- content ---------- */
+var STATIONS=[
+  {p:0.22,hour:16.5,label:"La cerimonia",side:1,main:'media/rito-1600.jpg',side1:'media/ritocivile-960.jpg',side2:'media/boschetto-960.jpg'},
+  {p:0.36,hour:17.5,label:"L\u0027aperitivo",side:-1,main:'media/piscina-1600.jpg',side1:'media/giardino-810.jpg',side2:'media/show-960.jpg'},
+  {p:0.5,hour:19.5,label:"La cena",side:1,main:'media/cena-1600.jpg',side1:'media/veranda-960.jpg',side2:'media/balconata-810.jpg'},
+  {p:0.64,hour:23,label:"La torta",side:-1,main:'media/torta-1600.jpg',side1:'media/archetto-960.jpg',side2:'media/tortagiardino-960.jpg'},
+  {p:0.78,hour:24.5,label:"La festa",side:1,main:'media/festa-1600.jpg',side1:'media/openbar-960.jpg',side2:'media/finefesta-960.jpg'}
+
+];
+var RING=["media/cerimonia-960.jpg", "media/stucchi-960.jpg", "media/sposi-960.jpg", "media/photobooth-960.jpg", "media/brindisi-960.jpg", "media/love-960.jpg", "media/balconata-810.jpg", "media/lanterne-960.jpg", "media/notte-960.jpg", "media/anfiteatro-960.jpg", "media/ulivo-960.jpg", "media/giardino-810.jpg"];
+var P_INVITE=.9, TRACK=118, MOB=window.innerWidth<720; // camera travels 0 → -TRACK
+
+/* sky stops: [p, r,g,b] */
+var SKY=[[0,.93,.86,.74],[.18,.96,.80,.58],[.36,.85,.58,.42],[.52,.42,.25,.36],[.66,.12,.11,.26],[.8,.05,.06,.14],[1,.03,.03,.08]];
+function skyAt(p){var a=SKY[0],b=SKY[SKY.length-1];for(var i=0;i<SKY.length-1;i++){if(p>=SKY[i][0]&&p<=SKY[i+1][0]){a=SKY[i];b=SKY[i+1];break;}}var t=(p-a[0])/Math.max(1e-6,(b[0]-a[0]));t=t*t*(3-2*t);return new THREE.Color(a[1]+(b[1]-a[1])*t,a[2]+(b[2]-a[2])*t,a[3]+(b[3]-a[3])*t);}
+
+/* ---------- renderer ---------- */
+var renderer=new THREE.WebGLRenderer({canvas:canvas,antialias:true,alpha:false,powerPreference:'high-performance'});
+var DPR=Math.min(window.devicePixelRatio||1,1.75);
+renderer.setPixelRatio(DPR);
+renderer.outputEncoding=THREE.sRGBEncoding;
+var scene=new THREE.Scene();
+scene.fog=new THREE.Fog(0x000000,18,60);
+var camera=new THREE.PerspectiveCamera(48,1,.1,200);
+camera.position.set(0,0,0);
+var manager=new THREE.LoadingManager();var loadbar=document.getElementById('loadbar');manager.onProgress=function(u,l,t){loadbar.style.width=(l/t*100)+'%';};var loadedAll=false;manager.onLoad=function(){loadedAll=true;document.getElementById('loader').classList.add('off');};setTimeout(function(){document.getElementById('loader').classList.add('off');},9000);
+var loader=new THREE.TextureLoader(manager);
+function tex(u,asp){var t=loader.load(u,function(tt){if(!asp||!tt.image)return;var ia=tt.image.width/tt.image.height;if(ia>asp){tt.repeat.set(asp/ia,1);tt.offset.set((1-asp/ia)/2,0);}else{tt.repeat.set(1,ia/asp);tt.offset.set(0,(1-ia/asp)/2);}tt.needsUpdate=true;});t.encoding=THREE.sRGBEncoding;t.minFilter=THREE.LinearFilter;t.generateMipmaps=false;return t;}
+function photo(url,w,h){var g=new THREE.PlaneGeometry(w,h);var m=new THREE.MeshBasicMaterial({map:tex(url,w/h),transparent:true,opacity:1,side:THREE.DoubleSide});var mesh=new THREE.Mesh(g,m);
+  // thin frame
+  var fg=new THREE.PlaneGeometry(w+.12,h+.12);var fm=new THREE.MeshBasicMaterial({color:0xF6F1E8,transparent:true,opacity:.9,side:THREE.DoubleSide});var f=new THREE.Mesh(fg,fm);f.position.z=-.01;mesh.add(f);mesh.userData.frame=f;return mesh;}
+var amb=new THREE.AmbientLight(0xffffff,1);scene.add(amb);
+
+/* hero ring */
+var ring=new THREE.Group();scene.add(ring);
+var RN=RING.length;
+var RR=MOB?5.2:7.4;for(var i=0;i<RN;i++){var a=i/RN*Math.PI*2;var ph=photo(RING[i],MOB?2.4:3.2,MOB?1.6:2.1);ph.position.set(Math.sin(a)*RR,Math.sin(i*1.7)*.5,Math.cos(a)*RR);ph.lookAt(0,ph.position.y,0);ring.add(ph);}
+ring.position.set(0,MOB?-2.9:-3.1,0);
+
+/* stations */
+var stMeshes=[];
+STATIONS.forEach(function(s,i){
+  var z=-(s.p*TRACK)-8; s.z=z;
+  var g=new THREE.Group();g.position.z=z;
+  var SC=MOB?.62:1;
+  var big=photo(s.main,6.6,4.4);big.position.set(MOB?0:s.side*2.2,MOB?1.9:.75,0);big.rotation.y=MOB?0:-s.side*.26;big.scale.setScalar(SC);g.add(big);
+  var s1=photo(s.side1,3.1,2.1);s1.position.set(MOB?-1.6*SC:-s.side*4.6,MOB?3.9:2.4,MOB?-3:-3.8);s1.rotation.y=s.side*.5;s1.scale.setScalar(SC);g.add(s1);
+  var s2=photo(s.side2,2.6,1.75);s2.position.set(MOB?2.4*SC:s.side*6.4,MOB?-.6:-2.2,MOB?-2.5:-5.5);s2.rotation.y=-s.side*.35;s2.scale.setScalar(SC);g.add(s2);
+  // time plaque: a thin gold line in 3D
+  var lg=new THREE.PlaneGeometry(.035,3.2);var lm=new THREE.MeshBasicMaterial({color:0xC4A16A});var line=new THREE.Mesh(lg,lm);line.position.set(MOB?2.6:s.side*-1.3,MOB?1.6:.6,-1.2);g.add(line);
+  scene.add(g);stMeshes.push(g);
+});
+
+/* invitation card (two hinged panels) */
+var inv=new THREE.Group();inv.position.set(0,.2,-TRACK-7.5);scene.add(inv);
+var cardMat=new THREE.MeshBasicMaterial({color:0xF6F1E8,side:THREE.DoubleSide});
+var left=new THREE.Mesh(new THREE.PlaneGeometry(3.2,4.4),cardMat);left.position.x=-1.6;inv.add(left);
+var rightPivot=new THREE.Group();rightPivot.position.x=0;inv.add(rightPivot);
+var right=new THREE.Mesh(new THREE.PlaneGeometry(3.2,4.4),cardMat.clone());right.position.x=1.6;rightPivot.add(right);
+var seal=new THREE.Mesh(new THREE.CircleGeometry(.42,40),new THREE.MeshBasicMaterial({color:0x8E2B2B}));seal.position.set(0,0,.02);inv.add(seal);
+var sealRing=new THREE.Mesh(new THREE.RingGeometry(.30,.34,40),new THREE.MeshBasicMaterial({color:0xC4A16A}));sealRing.position.set(0,0,.03);inv.add(sealRing);
+var invPhoto=photo('media/notte2-1280.jpg',6.6,4.4);invPhoto.position.set(0,0,-3.2);inv.add(invPhoto);if(MOB){inv.scale.setScalar(.7);}
+
+/* sun / moon */
+var sun=new THREE.Mesh(new THREE.SphereGeometry(1.6,32,32),new THREE.MeshBasicMaterial({color:0xFFE2A8}));scene.add(sun);
+var moon=new THREE.Mesh(new THREE.SphereGeometry(1.1,32,32),new THREE.MeshBasicMaterial({color:0xF3F0E6,transparent:true,opacity:0}));scene.add(moon);
+
+/* stars */
+var starGeo=new THREE.BufferGeometry();var SN=900;var sp=new Float32Array(SN*3);
+for(var k=0;k<SN;k++){var r=70+Math.random()*60;var th=Math.random()*Math.PI*2;var phv=Math.acos(2*Math.random()-1);sp[k*3]=r*Math.sin(phv)*Math.cos(th);sp[k*3+1]=Math.abs(r*Math.cos(phv))+2;sp[k*3+2]=r*Math.sin(phv)*Math.sin(th)-TRACK*.6;}
+starGeo.setAttribute('position',new THREE.BufferAttribute(sp,3));
+var starMat=new THREE.PointsMaterial({color:0xffffff,size:.9,transparent:true,opacity:0,sizeAttenuation:true,depthWrite:false});
+var stars=new THREE.Points(starGeo,starMat);scene.add(stars);
+
+/* petals → sparks */
+function spriteTex(kind){var c=document.createElement('canvas');c.width=c.height=64;var x=c.getContext('2d');x.clearRect(0,0,64,64);
+  if(kind==='petal'){x.fillStyle='#F2D7D5';x.beginPath();x.ellipse(32,32,22,13,.6,0,Math.PI*2);x.fill();x.fillStyle='rgba(255,255,255,.35)';x.beginPath();x.ellipse(26,27,8,4,.6,0,Math.PI*2);x.fill();}
+  else{var gr=x.createRadialGradient(32,32,0,32,32,30);gr.addColorStop(0,'rgba(255,236,180,1)');gr.addColorStop(.35,'rgba(255,200,100,.7)');gr.addColorStop(1,'rgba(255,170,60,0)');x.fillStyle=gr;x.fillRect(0,0,64,64);}
+  var t=new THREE.CanvasTexture(c);t.encoding=THREE.sRGBEncoding;return t;}
+var PN=window.innerWidth<720?220:420;
+var pGeo=new THREE.BufferGeometry();var pp=new Float32Array(PN*3);var pv=[];
+for(var q=0;q<PN;q++){pp[q*3]=(Math.random()-.5)*26;pp[q*3+1]=(Math.random()-.5)*16;pp[q*3+2]=-Math.random()*40;pv.push({vx:(Math.random()-.5)*.012,vy:-.01-Math.random()*.02,r:Math.random()*Math.PI*2});}
+pGeo.setAttribute('position',new THREE.BufferAttribute(pp,3));
+var petalMat=new THREE.PointsMaterial({map:spriteTex('petal'),size:.32,transparent:true,opacity:.9,depthWrite:false,sizeAttenuation:true});
+var sparkMat=new THREE.PointsMaterial({map:spriteTex('spark'),size:.42,transparent:true,opacity:0,depthWrite:false,blending:THREE.AdditiveBlending,sizeAttenuation:true});
+var petals=new THREE.Points(pGeo,petalMat);scene.add(petals);
+var sparks=new THREE.Points(pGeo,sparkMat);scene.add(sparks);
+
+/* ---------- DOM refs ---------- */
+var scroller=document.getElementById('scroller');
+var hero=document.getElementById('hero'),dragHint=document.getElementById('drag'),chapter=document.getElementById('chapter');
+var sts=[].slice.call(document.querySelectorAll('.st'));
+var invite=document.getElementById('invite'),credits=document.getElementById('credits');
+var clock=document.getElementById('clock'),clockLabel=document.getElementById('clockLabel');
+var rail=document.getElementById('rail');
+var title=document.getElementById('title');
+// split title
+var letters=[];(function(){var words=title.textContent.split(' ');title.textContent='';words.forEach(function(w,wi){var ws=document.createElement('span');ws.className='w';for(var i=0;i<w.length;i++){var s=document.createElement('span');s.textContent=w[i];ws.appendChild(s);letters.push(s);}title.appendChild(ws);if(wi<words.length-1)title.appendChild(document.createTextNode(' '));});})();
+// rail
+var chapters=[{p:0,n:'Inizio'}].concat(STATIONS.map(function(s){return{p:s.p,n:s.label}})).concat([{p:P_INVITE+.06,n:"L'invito"}]);
+chapters.forEach(function(c,i){var b=document.createElement('button');b.innerHTML='<span>'+c.n+'</span><i></i>';b.setAttribute('aria-label',c.n);b.addEventListener('click',function(){window.scrollTo({top:c.p*maxScroll(),behavior:'smooth'})});rail.appendChild(b);});
+var railBtns=[].slice.call(rail.children);
+document.getElementById('ctaTop').addEventListener('click',function(e){e.preventDefault();window.scrollTo({top:(P_INVITE+.07)*maxScroll(),behavior:'smooth'})});
+
+function maxScroll(){return document.documentElement.scrollHeight-window.innerHeight;}
+function clamp(v,a,b){return Math.max(a,Math.min(b,v));}
+function smooth(t){return t*t*(3-2*t);}
+function fmt(h){h=((h%24)+24)%24;var H=Math.floor(h),M=Math.round((h-H)*60);if(M===60){H=(H+1)%24;M=0;}return (H<10?'0':'')+H+':'+(M<10?'0':'')+M;}
+
+/* ---------- interaction ---------- */
+var mouse={x:0,y:0},tmouse={x:0,y:0};
+window.addEventListener('pointermove',function(e){tmouse.x=(e.clientX/window.innerWidth-.5)*2;tmouse.y=(e.clientY/window.innerHeight-.5)*2;},{passive:true});
+var dragging=false,lastX=0,ringVel=0,ringRot=0;
+canvas.style.pointerEvents='auto';
+canvas.addEventListener('pointerdown',function(e){dragging=true;lastX=e.clientX;canvas.setPointerCapture&&canvas.setPointerCapture(e.pointerId);});
+window.addEventListener('pointerup',function(){dragging=false;});
+window.addEventListener('pointermove',function(e){if(!dragging)return;var dx=e.clientX-lastX;lastX=e.clientX;ringVel+=dx*.00045;},{passive:true});
+
+/* ---------- resize ---------- */
+function resize(){var w=window.innerWidth,h=window.innerHeight;renderer.setSize(w,h,false);camera.aspect=w/h;camera.fov=w<720?62:48;camera.updateProjectionMatrix();}
+window.addEventListener('resize',resize);resize();
+
+/* ---------- main loop ---------- */
+var p=0,tp=0,lastT=0,activeSt=-1,curChapter=-1,lastDark=-1;
+function frame(t){
+  var dt=Math.min(.05,(t-lastT)/1000||.016);lastT=t;
+  tp=clamp(window.scrollY/Math.max(1,maxScroll()),0,1);
+  p+=(tp-p)*(1-Math.pow(.001,dt)); // critically-damped-ish ease
+  mouse.x+=(tmouse.x-mouse.x)*.06;mouse.y+=(tmouse.y-mouse.y)*.06;
+
+  /* camera path */
+  var z=-p*TRACK;
+  var wig=Math.sin(p*9.5)*1.2;
+  camera.position.set(wig+mouse.x*.6,Math.cos(p*7)*.5-mouse.y*.4,z);
+  var look=new THREE.Vector3(wig*.4,0,z-8);
+  if(p<.14){look.set(mouse.x*1.5,-1.9-mouse.y*.6,z-6);}
+  camera.lookAt(look);
+
+  /* sky, fog, sun, moon, stars */
+  var sky=skyAt(p);scene.background=sky;scene.fog.color=sky;
+  var lum=.2126*sky.r+.7152*sky.g+.0722*sky.b; var dark=clamp((lum-.28)/.2,0,1); /* 1 = light sky → dark text */
+  if(Math.abs(dark-lastDark)>.01){lastDark=dark;var R=Math.round(246+(21-246)*dark),G=Math.round(241+(23-241)*dark),B=Math.round(232+(28-232)*dark);document.documentElement.style.setProperty('--fg','rgb('+R+','+G+','+B+')');document.documentElement.style.setProperty('--fgm','rgba('+R+','+G+','+B+',.74)');}
+  scene.fog.near=p<.14?30:14;scene.fog.far=p<.14?90:52;
+  var sunAng=Math.PI*(.05+p*.95); // rises on the right, sets left
+  sun.position.set(Math.cos(sunAng)*40,Math.sin(sunAng)*22-4,z-70);
+  sun.material.color.setRGB(1,.9-p*.5,.66-p*.5);
+  sun.visible=p<.62;
+  var moonT=clamp((p-.55)/.3,0,1);moon.material.opacity=moonT;moon.position.set(-18+moonT*6,10+moonT*8,z-60);
+  starMat.opacity=clamp((p-.5)/.3,0,1)*.9;stars.position.z=z*.3;
+  /* ring */
+  ringVel*=0.94; ringRot+=ringVel+dt*.06; ring.rotation.y=ringRot;
+  ring.visible=p<.25; var ringFade=clamp(1-(p-.1)/.12,0,1); ring.position.z=z;
+  ring.children.forEach(function(m){m.material.opacity=ringFade;if(m.userData.frame)m.userData.frame.material.opacity=ringFade*.9;});
+  /* particles follow camera */
+  var pos=pGeo.attributes.position.array;
+  for(var i=0;i<PN;i++){var ix=i*3;pos[ix]+=pv[i].vx+Math.sin(t*.001+pv[i].r)*.002;pos[ix+1]+=pv[i].vy*(p>.6?-1.4:1);pos[ix+2]+=.004;
+    var rz=pos[ix+2]-z; if(rz>4||rz<-44||Math.abs(pos[ix+1])>10||Math.abs(pos[ix])>15){pos[ix]=(Math.random()-.5)*26;pos[ix+1]=p>.6?-7:8;pos[ix+2]=z-4-Math.random()*36;}}
+  pGeo.attributes.position.needsUpdate=true;
+  var sparkT=clamp((p-.58)/.12,0,1);petalMat.opacity=.9*(1-sparkT);sparkMat.opacity=sparkT*.95;
+  /* stations: subtle float */
+  stMeshes.forEach(function(g,i){g.visible=Math.abs(p-STATIONS[i].p)<.17;g.position.y=Math.sin(t*.0006+i)*.15;g.children[0].rotation.y+= (( -STATIONS[i].side*.28 - g.children[0].rotation.y)*.05);});
+  /* invitation open */
+  var it=clamp((p-(P_INVITE-.01))/.07,0,1);rightPivot.rotation.y=-smooth(it)*2.7;left.rotation.y=smooth(it)*.25;seal.scale.setScalar(1-it);sealRing.scale.setScalar(1-it);
+  inv.rotation.y=mouse.x*.12;
+
+  /* ---------- DOM ---------- */
+  var heroOp=clamp(1-(p-.02)/.1,0,1);hero.style.opacity=heroOp;hero.style.pointerEvents=heroOp>.5?'auto':'none';
+  dragHint.style.opacity=heroOp*.6;
+  for(var L=0;L<letters.length;L++){var k=L/letters.length;var e=clamp(p/.14,0,1);var ez=smooth(e);letters[L].style.transform='translate3d('+((k-.5)*ez*120)+'px,'+(Math.sin(L*1.3)*ez*60)+'px,'+(ez*-260)+'px) rotateY('+(ez*(k-.5)*70)+'deg)';letters[L].style.opacity=1-ez;}
+  var near=-1;
+  STATIONS.forEach(function(s,i){var d=Math.abs(p-s.p);if(d<.07)near=i;});
+  if(near!==activeSt){sts.forEach(function(el,i){el.classList.toggle('on',i===near)});activeSt=near;}
+  // clock: interpolate hour along stations
+  var hour=16+p*10; // fallback linear
+  for(var j=0;j<STATIONS.length;j++){var a=STATIONS[j],b=STATIONS[j+1];if(!b){if(p>=a.p){hour=a.hour+(p-a.p)/(1-a.p)*(26-a.hour);}break;}if(p>=a.p&&p<=b.p){hour=a.hour+(p-a.p)/(b.p-a.p)*(b.hour-a.hour);break;}}
+  if(p<STATIONS[0].p)hour=16+(p/STATIONS[0].p)*.5;
+  clock.textContent=fmt(hour);
+  clockLabel.textContent=hour<18?'il pomeriggio':hour<20.5?'il tramonto':hour<23.5?'la sera':'la notte';
+  // chapter + rail
+  var ch=0;for(var c=0;c<chapters.length;c++){if(p>=chapters[c].p-.06)ch=c;}
+  if(ch!==curChapter){curChapter=ch;railBtns.forEach(function(b,i){b.classList.toggle('on',i===ch)});chapter.textContent=(ch>0?('0'+ch+' · '):'')+chapters[ch].n;chapter.classList.toggle('on',ch>0);}
+  // invite
+  var invOn=p>P_INVITE+.045;invite.classList.toggle('on',invOn);credits.classList.toggle('on',p>.985);
+
+  renderer.render(scene,camera);
+  requestAnimationFrame(frame);
+}
+requestAnimationFrame(frame);
+})();
+</script>
+</body>
+</html>
