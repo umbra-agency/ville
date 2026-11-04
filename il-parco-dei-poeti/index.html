@@ -1,0 +1,550 @@
+<!doctype html>
+<html lang="it">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Il Parco dei Poeti · La cucina è di casa</title>
+<meta name="description" content="Il Parco dei Poeti, Cellino Attanasio (TE): cucina interna, un matrimonio alla volta, due sale e il parco con le palme e le piscine. Menù da 140 €, 162 recensioni a cinque stelle.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,400;1,9..144,300;1,9..144,400&family=Inter:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+:root{
+  --ivory:#F4EFE6; --linen:#E9E1D2; --paper:#FBF8F2; --ink:#1E1B18; --ink2:rgba(30,27,24,.68);
+  --terra:#B5643E; --olive:#4E6A5A; --brass:#B08D57; --cream:#F8F3EA;
+  --display:'Fraunces',Georgia,serif; --sans:'Inter',system-ui,sans-serif;
+  --p:0;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{background:var(--ivory);color:var(--ink);font-family:var(--sans);font-weight:300;overflow-x:hidden;-webkit-font-smoothing:antialiased;line-height:1.6}
+a{color:inherit}
+h1,h2,h3{font-family:var(--display);font-weight:300;line-height:1.02;letter-spacing:-.015em}
+em{font-style:italic}
+.eyebrow{font-size:10px;letter-spacing:.32em;text-transform:uppercase;color:var(--terra);font-weight:500}
+.wrap{width:min(1240px,100% - 48px);margin:0 auto}
+@media (max-width:720px){.wrap{width:calc(100% - 36px)}}
+
+/* nav */
+.nav{position:fixed;top:0;left:0;right:0;z-index:50;display:flex;align-items:center;justify-content:space-between;padding:20px clamp(18px,3vw,40px);transition:color .4s}
+.nav.light{color:var(--ivory)}.nav.light .brand small{color:rgba(244,239,230,.7)}.nav.light .cta{border-color:rgba(244,239,230,.6)}
+.nav .brand{font-family:var(--display);font-size:24px;text-decoration:none;line-height:1}
+.nav .brand small{display:block;font-family:var(--sans);font-size:9px;letter-spacing:.3em;text-transform:uppercase;color:var(--ink2);margin-top:5px}
+.nav .menu{display:flex;gap:26px;font-size:11px;letter-spacing:.2em;text-transform:uppercase}
+.nav .menu a{text-decoration:none;opacity:.75}
+.nav .cta{text-decoration:none;font-size:10px;letter-spacing:.28em;text-transform:uppercase;border:1px solid var(--ink);padding:12px 18px;border-radius:999px}
+@media (max-width:900px){.nav .menu{display:none}}
+@media (max-width:560px){.nav .cta{display:none}}
+
+/* ===== STAGE: the table ===== */
+.stage{position:relative;height:720vh}
+.stage .pin{position:sticky;top:0;height:100vh;overflow:hidden;perspective:1400px;perspective-origin:50% 35%}
+.scene{position:absolute;left:50%;top:50%;width:min(80vw,960px);aspect-ratio:1.05;transform:translate(-50%,-50%) translate(var(--sx,0px),var(--sy,0px)) scale(var(--ss,1));transform-style:preserve-3d;will-change:transform}
+.cloth{position:absolute;inset:0;transform:rotateX(var(--tilt,0deg)) rotateZ(var(--spin,0deg));transform-style:preserve-3d;border-radius:14px;
+  background:
+   repeating-linear-gradient(90deg,rgba(255,255,255,.08) 0 1px,transparent 1px 7px),
+   repeating-linear-gradient(0deg,rgba(0,0,0,.025) 0 1px,transparent 1px 7px),
+   linear-gradient(160deg,#EFE7D8,#E3D9C6);
+  box-shadow:0 60px 120px -40px rgba(60,40,20,.35),inset 0 0 0 1px rgba(255,255,255,.5)}
+.plate{position:absolute;left:50%;top:50%;width:50%;aspect-ratio:1;transform:translate(-50%,-50%) translateZ(6px);border-radius:50%;background:radial-gradient(circle at 50% 42%,#fff 0 58%,#F3EFE8 59% 60%,#fff 61% 78%,#EFEAE1 79% 82%,#FCFBF8 83%);box-shadow:0 18px 40px -18px rgba(60,40,20,.45),0 2px 0 rgba(0,0,0,.05),inset 0 -6px 14px rgba(0,0,0,.05)}
+.plate .rim{position:absolute;inset:0;border-radius:50%;border:1px solid rgba(176,141,87,.35)}
+.plate .rim2{position:absolute;inset:7%;border-radius:50%;border:1px solid rgba(176,141,87,.5)}
+.dish{position:absolute;left:50%;top:50%;width:62%;aspect-ratio:1;transform:translate(-50%,-50%) scale(0) rotate(-40deg);border-radius:50%;overflow:hidden;opacity:0;box-shadow:0 10px 30px -12px rgba(0,0,0,.4)}
+.dish img{width:100%;height:100%;object-fit:cover;display:block}
+.dish.on{opacity:1;transform:translate(-50%,-50%) scale(1) rotate(0)}
+.dish.off{opacity:0;transform:translate(-50%,-50%) scale(1.25) rotate(30deg)}
+.dish{transition:transform .9s cubic-bezier(.2,.7,.2,1),opacity .6s}
+.cutlery{position:absolute;top:50%;height:46%;transform:translateY(-50%) translateZ(4px);filter:drop-shadow(0 6px 10px rgba(0,0,0,.18))}
+.fork{left:17%;transform:translateY(-50%) translateZ(4px) translateX(calc(-70vw * (1 - var(--set,0))))}
+.knife{right:17%;transform:translateY(-50%) translateZ(4px) translateX(calc(70vw * (1 - var(--set,0))))}
+.spoon{right:11.5%;transform:translateY(-50%) translateZ(4px) translateX(calc(90vw * (1 - var(--set,0))))}
+.cutlery svg{height:100%;width:auto;display:block}
+.glass{position:absolute;right:16%;top:7%;width:11%;aspect-ratio:1;border-radius:50%;transform:translateZ(5px) scale(var(--set,0));background:radial-gradient(circle at 40% 35%,rgba(255,255,255,.95),rgba(230,225,215,.5) 60%,rgba(200,190,170,.6) 61%,rgba(255,255,255,.3) 70%);box-shadow:0 10px 22px -8px rgba(0,0,0,.25),inset 0 0 0 1px rgba(0,0,0,.08)}
+.glass:after{content:"";position:absolute;inset:18%;border-radius:50%;background:radial-gradient(circle at 50% 50%,rgba(180,84,58,.35),rgba(180,84,58,.6));opacity:var(--wine,0)}
+.napkin{position:absolute;left:50%;top:50%;width:18%;aspect-ratio:.72;transform:translate(-50%,-50%) translateZ(8px) rotate(-6deg) scale(calc(1 - var(--unfold,0)));background:linear-gradient(135deg,#F6F1E8,#E8E0D0);box-shadow:0 10px 24px -10px rgba(0,0,0,.35);border-radius:3px;opacity:calc(1 - var(--unfold,0))}
+.napkin:before{content:"";position:absolute;inset:0;background:linear-gradient(90deg,transparent 48%,rgba(0,0,0,.06) 50%,transparent 52%)}
+.card3d{position:absolute;left:3%;top:16%;width:21%;aspect-ratio:.68;background:var(--paper);box-shadow:0 20px 40px -20px rgba(0,0,0,.4);transform:translateZ(10px) rotate(-9deg) translateY(calc(-40px * (1 - var(--set,0))));opacity:var(--set,0);padding:7% 7%;font-family:var(--display);font-size:clamp(9px,1.1vw,15px);line-height:1.35;border-top:3px solid var(--terra)}
+.card3d b{display:block;font-weight:400;font-style:italic;margin-bottom:.4em}
+.card3d small{display:block;font-family:var(--sans);font-size:.62em;letter-spacing:.2em;text-transform:uppercase;color:var(--ink2);margin-bottom:.7em}
+/* place card on the cloth */
+.placecard{position:absolute;left:50%;bottom:6%;transform:translateX(-50%) translateZ(5px);font-family:var(--display);font-style:italic;font-size:clamp(14px,1.6vw,22px);background:var(--paper);padding:.4em 1.2em;box-shadow:0 8px 20px -10px rgba(0,0,0,.4);opacity:var(--set,0)}
+
+/* overlays on the stage */
+.ov{position:absolute;inset:0;pointer-events:none}
+.hero-txt{position:absolute;left:0;right:0;top:12vh;text-align:center;padding:0 20px;transition:opacity .4s}
+.hero-txt h1{font-size:clamp(44px,8.2vw,112px)}
+.hero-txt h1 em{color:var(--terra)}
+.hero-txt p{max-width:520px;margin:18px auto 0;color:var(--ink2);font-size:clamp(14px,1.25vw,17px)}
+.hero-txt .scroll{margin-top:26px;font-size:9px;letter-spacing:.34em;text-transform:uppercase;color:var(--ink2)}
+.course{position:absolute;left:clamp(18px,4vw,60px);top:50%;transform:translateY(-50%);width:min(340px,30vw);opacity:0;transition:opacity .5s,transform .7s;pointer-events:none}
+.course.on{opacity:1;pointer-events:auto}
+.course .t{font-family:var(--display);font-size:clamp(40px,5vw,72px);line-height:1;font-variant-numeric:tabular-nums}
+.course .t small{font-size:.38em;font-style:italic;color:var(--terra);margin-left:.4em}
+.course h2{font-size:clamp(26px,3vw,44px);margin:12px 0 10px}
+.course p{color:var(--ink2);font-size:clamp(13px,1.1vw,15px)}
+.course .tag{display:inline-block;margin-top:14px;font-size:10px;letter-spacing:.25em;text-transform:uppercase;border:1px solid rgba(30,27,24,.25);border-radius:999px;padding:7px 12px}
+.menu-card{position:absolute;right:clamp(18px,3vw,50px);top:50%;transform:translateY(-50%) rotate(2deg);width:min(270px,22vw);background:var(--paper);padding:26px 24px 22px;box-shadow:0 30px 60px -30px rgba(0,0,0,.45);opacity:0;transition:opacity .5s;border-top:3px solid var(--terra)}
+.menu-card.on{opacity:1}
+.menu-card .h{font-family:var(--display);font-style:italic;font-size:22px;text-align:center;margin-bottom:6px}
+.menu-card .d{text-align:center;font-size:9px;letter-spacing:.3em;text-transform:uppercase;color:var(--ink2);margin-bottom:16px}
+.menu-card ol{list-style:none;display:grid;gap:9px}
+.menu-card li{display:flex;justify-content:space-between;gap:10px;font-size:13px;color:var(--ink2);opacity:.35;transition:opacity .4s,color .4s;font-family:var(--display);font-size:16px}
+.menu-card li.on{opacity:1;color:var(--ink)}
+.menu-card li.done{opacity:.8}
+.menu-card li.done span:first-child{text-decoration:line-through;text-decoration-color:var(--terra)}
+.menu-card li span:last-child{font-family:var(--sans);font-size:10px;letter-spacing:.2em;align-self:center}
+.steps{position:absolute;left:50%;bottom:26px;transform:translateX(-50%);display:flex;gap:8px;pointer-events:auto}
+.steps i{width:28px;height:2px;background:rgba(30,27,24,.18);display:block;border-radius:2px;transition:background .3s}
+.steps i.on{background:var(--terra)}
+@media (max-width:900px){
+  .scene{width:min(96vw,620px);aspect-ratio:1}
+  .course{left:18px;right:18px;top:auto;bottom:40px;transform:none;width:auto}
+  .course .t{font-size:32px}.course h2{font-size:24px;margin:6px 0 6px}.course p{font-size:13px;display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden}.course .tag{display:none}
+  .menu-card{display:none}
+  .stage .pin{perspective-origin:50% 30%}
+  .card3d{display:none}
+  .steps{bottom:auto;top:84px}
+}
+
+/* ===== generic sections ===== */
+.sec{position:relative;padding:clamp(80px,12vw,160px) 0}
+.sec .head{display:grid;grid-template-columns:1fr 1fr;gap:40px;align-items:end;margin-bottom:clamp(36px,5vw,70px)}
+.sec .head h2{font-size:clamp(36px,5vw,72px)}
+.sec .head p{color:var(--ink2);max-width:460px;font-size:15px}
+@media (max-width:800px){.sec .head{grid-template-columns:1fr;gap:16px}}
+
+/* ===== show cooking: dark horizontal ===== */
+.show{background:var(--ink);color:var(--ivory);height:380vh;position:relative}
+.show .pin{position:sticky;top:0;height:100vh;overflow:hidden}
+.show canvas{position:absolute;inset:0;width:100%;height:100%}
+.show .track{position:absolute;left:0;top:50%;transform:translateY(-50%) translateX(calc(var(--p) * (-1 * var(--tw,2000px))));display:flex;gap:4vw;padding-left:6vw;align-items:center;will-change:transform}
+.show .intro{flex:0 0 min(520px,80vw);padding-right:4vw}
+.show .intro h2{font-size:clamp(40px,5.6vw,84px);color:var(--ivory)}
+.show .intro h2 em{color:#E3A074}
+.show .intro p{color:rgba(244,239,230,.68);margin-top:18px;max-width:420px;font-size:15px}
+.show figure{flex:0 0 auto;width:min(620px,78vw);position:relative}
+.show figure img{width:100%;height:auto;aspect-ratio:3/2;object-fit:cover;display:block;border-radius:4px;filter:saturate(1.05)}
+.show figure.tall img{aspect-ratio:4/5;width:min(440px,70vw)}
+.show figcaption{position:absolute;left:0;bottom:-34px;font-family:var(--display);font-style:italic;font-size:20px;color:rgba(244,239,230,.8)}
+.show figcaption b{font-family:var(--sans);font-style:normal;font-weight:400;font-size:10px;letter-spacing:.3em;text-transform:uppercase;margin-right:10px;color:#E3A074}
+.show .end{flex:0 0 min(420px,80vw);padding-right:8vw}
+.show .end h3{font-size:clamp(28px,3.4vw,48px)}
+.show .end p{color:rgba(244,239,230,.68);margin-top:14px}
+.show .heat{position:absolute;left:0;right:0;bottom:0;height:40%;background:linear-gradient(to top,rgba(180,84,58,.35),transparent);pointer-events:none}
+.show .bar{position:absolute;left:6vw;right:6vw;bottom:28px;height:1px;background:rgba(244,239,230,.2)}
+.show .bar i{position:absolute;left:0;top:-1px;height:3px;width:calc(var(--p)*100%);background:#E3A074}
+
+/* ===== isole: isometric ===== */
+.isole{background:var(--linen);overflow:hidden}
+.iso-wrap{perspective:1800px;perspective-origin:50% 20%;margin-top:30px}
+.iso{display:grid;grid-template-columns:repeat(3,1fr);gap:clamp(18px,3vw,40px);transform:rotateX(52deg) rotateZ(-38deg);transform-style:preserve-3d;width:min(880px,100%);margin:40px auto 160px}
+.isle{position:relative;aspect-ratio:1;transform-style:preserve-3d;transform:translateZ(0);--up:0}
+.isle .top{position:absolute;inset:0;background:var(--paper);border-radius:6px;overflow:hidden;transform:translateZ(calc(var(--up) * 70px));box-shadow:0 0 0 1px rgba(0,0,0,.05);transition:transform .9s cubic-bezier(.2,.7,.2,1)}
+.isle .top img{width:100%;height:100%;object-fit:cover;display:block;opacity:calc(.25 + var(--up)*.75);transition:opacity .9s}
+.isle .side{position:absolute;left:0;right:0;bottom:0;height:70px;transform-origin:bottom;transform:rotateX(-90deg) scaleY(var(--up));background:linear-gradient(#D9CFBC,#B9AD98);transition:transform .9s cubic-bezier(.2,.7,.2,1)}
+.isle .side2{position:absolute;top:0;bottom:0;right:0;width:70px;transform-origin:right;transform:rotateY(90deg) scaleX(var(--up));background:linear-gradient(90deg,#CFC4B0,#A89C87);transition:transform .9s cubic-bezier(.2,.7,.2,1)}
+.isle .lbl{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%) translateZ(calc(var(--up)*70px + 40px)) rotateZ(38deg) rotateX(-52deg);font-family:var(--display);font-style:italic;font-size:clamp(16px,2.2vw,26px);white-space:nowrap;background:var(--ink);color:var(--ivory);padding:.25em .8em;border-radius:999px;opacity:var(--up);transition:opacity .6s,transform .9s cubic-bezier(.2,.7,.2,1)}
+.iso-legend{display:flex;flex-wrap:wrap;gap:10px 26px;justify-content:center;font-size:12px;color:var(--ink2);margin-top:-60px}
+.iso-legend span:before{content:"";display:inline-block;width:8px;height:8px;border-radius:50%;background:var(--terra);margin-right:8px;vertical-align:middle}
+@media (max-width:720px){.iso{transform:rotateX(50deg) rotateZ(-30deg) scale(.8);gap:14px;margin-bottom:40px}.isle .lbl{font-size:14px}.iso-legend{margin-top:0}}
+
+/* ===== location fan ===== */
+.fan-sec{background:var(--ivory);overflow:hidden}
+.fan{position:relative;height:min(78vw,560px);margin-top:10px}
+.fan .c{position:absolute;left:50%;bottom:0;width:min(300px,60vw);aspect-ratio:3/4;margin-left:calc(min(300px,60vw) / -2);transform-origin:50% 140%;transform:rotate(calc(var(--a,0deg) * var(--p,0) * var(--af,1)));background:var(--paper);padding:10px 10px 46px;box-shadow:0 30px 50px -30px rgba(0,0,0,.4);transition:transform .9s cubic-bezier(.2,.7,.2,1);cursor:pointer}
+.fan .c img{width:100%;height:calc(100% - 0px);object-fit:cover;display:block}
+.fan .c span{position:absolute;left:14px;right:14px;bottom:12px;font-family:var(--display);font-style:italic;font-size:17px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.fan .c small{position:absolute;right:14px;bottom:14px;font-size:9px;letter-spacing:.2em;text-transform:uppercase;color:var(--ink2)}
+.fan .c:hover{transform:rotate(calc(var(--a,0deg) * var(--p,0) * var(--af,1))) translateY(-24px)}
+@media (max-width:720px){.fan{--af:.62}}
+.fan-hint{text-align:center;font-size:10px;letter-spacing:.3em;text-transform:uppercase;color:var(--ink2);margin-top:30px}
+
+/* ===== il conto: receipt ===== */
+.conto{background:var(--olive);color:var(--ivory)}
+.conto .eyebrow{color:#E3A074}
+.conto .head h2{color:var(--ivory)}
+.conto .head p{color:rgba(244,239,230,.7)}
+.conto .grid{display:grid;grid-template-columns:1fr 1fr;gap:clamp(30px,5vw,80px);align-items:start}
+@media (max-width:800px){.conto .grid{grid-template-columns:1fr}}
+.ctrl label{display:block;font-size:10px;letter-spacing:.3em;text-transform:uppercase;margin:26px 0 10px;color:rgba(244,239,230,.75)}
+.ctrl .big{font-family:var(--display);font-size:clamp(54px,7vw,96px);line-height:1;font-variant-numeric:tabular-nums}
+.ctrl .big small{font-size:.3em;font-style:italic;margin-left:.3em;color:#E3A074}
+.ctrl input[type=range]{width:100%;accent-color:#E3A074;margin-top:10px}
+.ctrl .opts{display:flex;flex-wrap:wrap;gap:8px}
+.ctrl .opts button{font:inherit;font-size:12px;border:1px solid rgba(244,239,230,.4);background:none;color:var(--ivory);padding:9px 14px;border-radius:999px;cursor:pointer}
+.ctrl .opts button.on{background:var(--ivory);color:var(--olive);border-color:var(--ivory)}
+.ctrl .note{font-size:12px;color:rgba(244,239,230,.6);margin-top:26px;max-width:420px}
+.receipt{background:#FDFCF8;color:#2b2622;width:min(380px,100%);margin:0 auto;padding:28px 26px 36px;font-family:'Courier New',ui-monospace,monospace;font-size:13px;line-height:1.5;position:relative;box-shadow:0 30px 60px -30px rgba(0,0,0,.6);transform:rotate(-1deg)}
+.receipt:before,.receipt:after{content:"";position:absolute;left:0;right:0;height:12px;background:radial-gradient(circle,transparent 6px,#FDFCF8 6.5px) -6px 0/12px 12px repeat-x}
+.receipt:before{top:-10px;transform:rotate(180deg)}.receipt:after{bottom:-10px}
+.receipt .logo{text-align:center;font-family:var(--display);font-size:24px;font-style:italic;letter-spacing:0}
+.receipt .sub{text-align:center;font-size:10px;letter-spacing:.2em;text-transform:uppercase;opacity:.65;margin-bottom:14px}
+.receipt hr{border:0;border-top:1px dashed rgba(0,0,0,.35);margin:10px 0}
+.receipt .ln{display:flex;justify-content:space-between;gap:10px;opacity:0;transform:translateY(4px);transition:opacity .25s,transform .25s}
+.receipt .ln.on{opacity:1;transform:none}
+.receipt .ln.small{font-size:11px;opacity:.7}
+.receipt .tot{font-size:18px;font-weight:700}
+.receipt .foot{text-align:center;font-size:10px;margin-top:16px;opacity:.7}
+.receipt .code{height:34px;margin-top:12px;background:repeating-linear-gradient(90deg,#2b2622 0 2px,transparent 2px 4px,#2b2622 4px 5px,transparent 5px 8px,#2b2622 8px 11px,transparent 11px 13px)}
+
+/* ===== story + proof ===== */
+.story .cols{display:grid;grid-template-columns:1.1fr .9fr;gap:60px;align-items:center}
+@media (max-width:860px){.story .cols{grid-template-columns:1fr;gap:30px}}
+.story h2{font-size:clamp(36px,4.6vw,64px)}
+.story p{color:var(--ink2);margin-top:16px;max-width:520px}
+.story .ph{position:relative;perspective:1000px}
+.story .ph img{width:100%;height:auto;display:block;border-radius:4px;transform:rotateY(calc(-14deg + var(--p)*14deg)) rotateX(calc(6deg - var(--p)*6deg));transition:transform .2s linear;box-shadow:0 40px 70px -40px rgba(0,0,0,.5)}
+.facts{display:grid;grid-template-columns:repeat(4,1fr);gap:20px;margin-top:70px;border-top:1px solid rgba(30,27,24,.15);padding-top:30px}
+.facts b{display:block;font-family:var(--display);font-weight:300;font-size:clamp(40px,4.5vw,64px);line-height:1}
+.facts span{font-size:12px;color:var(--ink2)}
+@media (max-width:720px){.facts{grid-template-columns:1fr 1fr}}
+.proof{background:var(--linen)}
+.napkins{display:grid;grid-template-columns:repeat(3,1fr);gap:24px}
+@media (max-width:800px){.napkins{grid-template-columns:1fr}}
+.nk{background:var(--paper);padding:34px 28px 28px;position:relative;transform:rotate(calc(var(--r,0deg)));box-shadow:0 20px 40px -24px rgba(0,0,0,.35);font-family:var(--display);font-size:20px;line-height:1.4}
+.nk:before{content:"“";position:absolute;left:18px;top:4px;font-size:70px;color:var(--terra);line-height:1;font-style:italic}
+.nk small{display:block;font-family:var(--sans);font-size:11px;letter-spacing:.1em;color:var(--ink2);margin-top:18px}
+
+/* ===== envelope ===== */
+.env-sec{background:var(--ivory);height:260vh;position:relative}
+.env-sec .pin{position:sticky;top:0;height:100vh;display:grid;place-items:center;overflow:hidden;perspective:1600px}
+.env{position:relative;width:min(640px,92vw);aspect-ratio:1.55;transform-style:preserve-3d;transform:translateY(calc((1 - var(--p)) * 10vh + var(--out,0) * 4vh))}
+.env .back,.env .front,.env .flap,.env .seal{transition:transform 1.1s cubic-bezier(.2,.7,.2,1)}
+.env .back{position:absolute;inset:0;background:#E4D8C2;border-radius:6px;box-shadow:0 50px 90px -40px rgba(0,0,0,.5);transform:translateY(calc(var(--out,0) * 70vh))}
+.env .letter{position:absolute;left:5%;right:5%;top:6%;bottom:0;background:var(--paper);border-radius:4px;transform:translateY(calc(-1 * var(--out) * 10%)) translateZ(calc(1px + var(--out,0) * 5px));transition:transform .9s cubic-bezier(.2,.7,.2,1);box-shadow:0 10px 30px -20px rgba(0,0,0,.4);padding:clamp(18px,3vw,36px);overflow:hidden}
+.env .front{position:absolute;inset:0;border-radius:6px;background:linear-gradient(170deg,#EFE5D1,#DED1B7);clip-path:polygon(0 0,50% 48%,100% 0,100% 100%,0 100%);transform:translateZ(2px) translateY(calc(var(--out,0) * 70vh))}
+.env .flap{position:absolute;left:0;right:0;top:0;height:52%;background:linear-gradient(190deg,#E9DDC6,#D8CAAE);clip-path:polygon(0 0,100% 0,50% 100%);transform-origin:top;transform:translateZ(3px) translateY(calc(var(--out,0) * 70vh)) rotateX(calc(var(--open) * -170deg));transition:transform 1.1s cubic-bezier(.2,.7,.2,1);backface-visibility:visible}
+.env .seal{position:absolute;left:50%;top:48%;width:70px;height:70px;margin:-35px 0 0 -35px;border-radius:50%;background:radial-gradient(circle at 40% 35%,#D0735A,#8E2B2B 70%);box-shadow:0 6px 14px -4px rgba(0,0,0,.5),inset 0 0 0 4px rgba(255,255,255,.08);transform:translateZ(4px) scale(calc(1 - var(--open)));display:grid;place-items:center;font-family:var(--display);font-style:italic;color:rgba(255,235,220,.9);font-size:26px;cursor:pointer;border:0;transition:transform .6s}
+.env .letter h3{font-size:clamp(20px,2.4vw,30px);margin:4px 0 6px}
+.env .letter p{font-size:12.5px;color:var(--ink2);max-width:460px;line-height:1.45}
+.env form{display:grid;grid-template-columns:1fr 1fr;gap:8px 10px;margin-top:12px}
+.env label{display:flex;flex-direction:column;gap:5px;font-size:9px;letter-spacing:.26em;text-transform:uppercase;color:var(--ink2)}
+.env input,.env select{font:inherit;font-size:13px;padding:8px 10px;border:1px solid rgba(30,27,24,.22);background:#fff;border-radius:2px;color:var(--ink)}
+.env .full{grid-column:1/-1}
+.env button.send{grid-column:1/-1;font:inherit;font-size:10px;letter-spacing:.3em;text-transform:uppercase;background:var(--ink);color:var(--ivory);border:0;padding:12px;border-radius:2px;cursor:pointer}
+.env .foot{grid-column:1/-1;font-size:11px;color:var(--ink2);text-align:center}
+.env-txt{position:absolute;left:0;right:0;top:9vh;text-align:center;pointer-events:none;transition:opacity .5s}
+.env-txt h2{font-size:clamp(34px,5vw,70px)}
+.env-txt p{color:var(--ink2);margin-top:10px;font-size:14px}
+@media (max-width:640px){.env{aspect-ratio:.78;width:min(420px,92vw)}.env .letter{top:4%;padding:16px 14px}.env .flap{height:38%}.env .seal{top:36%}.env .front{clip-path:polygon(0 0,50% 36%,100% 0,100% 100%,0 100%)}.env form{grid-template-columns:1fr;gap:8px}.env .letter h3{font-size:22px}.env .letter p{font-size:12px}.env input,.env select{padding:8px 10px;font-size:13px}.env-txt{top:6vh}.env-txt h2{font-size:32px}}
+footer{padding:40px 0;font-size:11px;letter-spacing:.2em;text-transform:uppercase;color:var(--ink2);text-align:center;background:var(--ivory)}
+@media (prefers-reduced-motion:reduce){*{transition:none!important}}
+</style>
+</head>
+<body>
+
+<nav class="nav">
+  <a class="brand" href="#top">Il Parco dei Poeti<small>Colline teramane · Cellino Attanasio</small></a>
+  <div class="menu"><a href="#portate">Le portate</a><a href="#show">La cucina</a><a href="#dove">Il parco</a><a href="#conto">Il conto</a></div>
+  <a class="cta" href="#degusta">Chiedi la data</a>
+</nav>
+
+<!-- ===== STAGE ===== -->
+<section class="stage" id="top" data-pin="stage">
+  <div class="pin">
+    <div class="scene" id="scene">
+      <div class="cloth" id="cloth">
+        <div class="card3d"><small>Il menù</small><b>Sala D'Annunzio</b>Buffet in piscina · Il pesce del buffet · La cena al tavolo · La torta nuziale · La confettata</div>
+        <div class="cutlery fork"><svg viewBox="0 0 40 300" fill="none"><path d="M20 300V118" stroke="#8B8A86" stroke-width="7" stroke-linecap="round"/><path d="M8 0v70c0 18 6 30 12 36 6-6 12-18 12-36V0" stroke="#A7A6A1" stroke-width="7" stroke-linejoin="round"/><path d="M20 0v100" stroke="#A7A6A1" stroke-width="5"/></svg></div>
+        <div class="cutlery knife"><svg viewBox="0 0 40 300" fill="none"><path d="M20 300V140" stroke="#8B8A86" stroke-width="7" stroke-linecap="round"/><path d="M12 0h12c8 30 10 90 2 140H14C6 90 6 30 12 0z" fill="#C9C8C2"/></svg></div>
+        <div class="cutlery spoon"><svg viewBox="0 0 40 300" fill="none"><path d="M20 300V96" stroke="#8B8A86" stroke-width="7" stroke-linecap="round"/><ellipse cx="20" cy="50" rx="15" ry="48" fill="#BDBCB6"/></svg></div>
+        <div class="glass"></div>
+        <div class="placecard">Giulia &amp; Marco</div>
+        <div class="plate" id="plate">
+          <div class="rim"></div><div class="rim2"></div>
+          <div class="napkin"></div>
+          <div class="dish" data-i="0"><img src="media/prosciutto-960.jpg" alt=""></div>
+          <div class="dish" data-i="1"><img src="media/pesce-960.jpg" alt=""></div>
+          <div class="dish" data-i="2"><img src="media/sala-960.jpg" alt=""></div>
+          <div class="dish" data-i="3"><img src="media/torta-960.jpg" alt=""></div>
+          <div class="dish" data-i="4"><img src="media/confettata-960.jpg" alt=""></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="ov">
+      <div class="hero-txt" id="heroTxt">
+        <div class="eyebrow">Cucina interna · un matrimonio alla volta</div>
+        <h1>La tavola si <em>apparecchia</em><br>tra le palme.</h1>
+        <p>Una famiglia che fa matrimoni, una cucina che sta qui dentro e un parco con le palme sulle colline teramane. Scorrete: arrivano le posate, poi una portata alla volta.</p>
+        <div class="scroll">scorri per sederti</div>
+      </div>
+
+      <article class="course" data-i="0"><div class="t">17:00<small>l'aperitivo</small></div><h2>Il prosciutto al coltello</h2><p>Il buffet dell'aperitivo nel parco centrale, a bordo piscina: si taglia al momento, si brinda, si gira tra le palme.</p><span class="tag">Portata 1 di 5</span></article>
+      <article class="course" data-i="1"><div class="t">17:45<small>il buffet</small></div><h2>Il pesce, presentato come un quadro</h2><p>Qui gli ospiti mangiano prima con gli occhi: la presentazione dei piatti è una priorità, a buffet come al tavolo.</p><span class="tag">Portata 2 di 5</span></article>
+      <article class="course" data-i="2"><div class="t">20:00<small>la cena</small></div><h2>Servita in Sala D'Annunzio</h2><p>Fino a 300 invitati sotto il soffitto a onda, con le vetrate sul giardino. Allergie, celiachia, vegani e vegetariani hanno il loro menù, senza rinunce.</p><span class="tag">Portata 3 di 5</span></article>
+      <article class="course" data-i="3"><div class="t">23:00<small>la torta</small></div><h2>Fatta da zero, per voi</h2><p>Ogni matrimonio ha la sua torta, realizzata da zero, unica e irripetibile. Si taglia tra le palme o davanti alla scalinata, con le fontane di scintille.</p><span class="tag">Portata 4 di 5</span></article>
+      <article class="course" data-i="4"><div class="t">23:30<small>la confettata</small></div><h2>I confetti, i fiori, la notte</h2><p>La confettata accanto alla piscina illuminata, mentre la festa va avanti in sala.</p><span class="tag">Portata 5 di 5</span></article>
+
+      <aside class="menu-card" id="menuCard">
+        <div class="h">Il menù della sera</div>
+        <div class="d">Il Parco dei Poeti</div>
+        <ol>
+          <li><span>Buffet in piscina</span><span>17:00</span></li>
+          <li><span>Il pesce del buffet</span><span>17:45</span></li>
+          <li><span>La cena al tavolo</span><span>20:00</span></li>
+          <li><span>La torta nuziale</span><span>23:00</span></li>
+          <li><span>La confettata</span><span>23:30</span></li>
+        </ol>
+      </aside>
+      <div class="steps" id="steps"><i></i><i></i><i></i><i></i><i></i></div>
+    </div>
+  </div>
+</section>
+<a id="portate"></a>
+
+<!-- ===== SHOW ===== -->
+<section class="show" id="show" data-pin="show">
+  <div class="pin">
+    <canvas id="embers"></canvas>
+    <div class="heat"></div>
+    <div class="track" id="track">
+      <div class="intro"><div class="eyebrow" style="color:#E3A074">la cucina, qui dentro</div><h2>Tutto esce <em>dalla nostra cucina.</em></h2><p>La cucina interna è da sempre il punto di forza del Parco dei Poeti: lo chef e lo staff costruiscono il menù con voi, dagli antipasti al dolce.</p></div>
+      <figure><img src="media/cake-1280.jpg" alt=""><figcaption><b>la torta</b>Tra le palme, al sole</figcaption></figure>
+      <figure class="tall"><img src="media/finger-853.jpg" alt=""><figcaption><b>il buffet</b>I dolcetti in bicchierino</figcaption></figure>
+      <figure><img src="media/fuochi-1280.jpg" alt=""><figcaption><b>il taglio</b>Davanti alla scalinata</figcaption></figure>
+      <figure><img src="media/bomboniere-1280.jpg" alt=""><figcaption><b>il dettaglio</b>Le bomboniere a bordo piscina</figcaption></figure>
+      <div class="end"><h3>Un matrimonio alla volta.</h3><p>Due sale, ma un solo matrimonio al giorno: tempi, spazi e cucina sono tutti per voi.</p></div>
+    </div>
+    <div class="bar"><i></i></div>
+  </div>
+</section>
+
+<!-- ===== DOVE: fan ===== -->
+<section class="sec fan-sec" id="dove" data-pin="fan">
+  <div class="wrap">
+    <div class="head"><div><div class="eyebrow">Il parco</div><h2>Tre giardini, <em>due sale, le palme.</em></h2></div><p>La Location D'Annunzio fino a 300 invitati, la Location Leopardi per i matrimoni più raccolti sotto i 150. Intorno, il parco con le piscine. Aprite il ventaglio.</p></div>
+    <div class="fan" id="fan">
+      <div class="c" style="--a:-54.0deg"><img src="media/dannunzio-960.jpg" alt=""><span>Sala D'Annunzio</span></div>
+      <div class="c" style="--a:-36.0deg"><img src="media/leopardi-960.jpg" alt=""><span>Piscina Leopardi</span></div>
+      <div class="c" style="--a:-18.0deg"><img src="media/ponte-960.jpg" alt=""><span>Il ponte sulla piscina</span></div>
+      <div class="c" style="--a:0.0deg"><img src="media/civile-960.jpg" alt=""><span>Il rito civile</span></div>
+      <div class="c" style="--a:18.0deg"><img src="media/giardino-960.jpg" alt=""><span>Il nuovo giardino</span></div>
+      <div class="c" style="--a:36.0deg"><img src="media/sentieri-960.jpg" alt=""><span>I sentieri</span></div>
+      <div class="c" style="--a:54.0deg"><img src="media/notte-960.jpg" alt=""><span>Il parco di notte</span></div>
+    </div>
+    <div class="fan-hint">Passate sopra una carta per alzarla</div>
+  </div>
+</section>
+
+<!-- ===== IL CONTO ===== -->
+<section class="sec conto" id="conto">
+  <div class="wrap">
+    <div class="head"><div><div class="eyebrow">Lo scontrino</div><h2>Il conto, <em>prima di sedervi.</em></h2></div><p>Su Matrimonio.com il menù parte da 140 € a persona. Spostate gli invitati e lo scontrino si stampa da solo.</p></div>
+    <div class="grid">
+      <div class="ctrl">
+        <label>Quanti siete</label>
+        <div class="big"><span id="nGuests">120</span><small>invitati</small></div>
+        <input type="range" id="guests" min="60" max="300" step="10" value="120" aria-label="Numero di invitati">
+        <label>Il menù</label>
+        <div class="opts" id="menus">
+          <button class="on">Menù da 140 €</button>
+        </div>
+        <label>Gli extra, su preventivo</label>
+        <div class="opts" id="extras">
+          <button data-x="1">Fontane di scintille</button>
+          <button data-x="2">Celebrante per il rito</button>
+          <button data-x="3">Camera degli sposi</button>
+        </div>
+        <p class="note">Stima indicativa dal prezzo di partenza pubblicato su Matrimonio.com (140–160 € a persona). Il preventivo vero lo fate con Loris e Marzia.</p>
+      </div>
+      <div class="receipt" id="receipt">
+        <div class="logo">Il Parco dei Poeti</div>
+        <div class="sub">Cellino Attanasio (TE) · stima</div>
+        <hr>
+        <div class="ln"><span>Menù di nozze</span><span>140,00 €</span></div>
+        <div class="ln small"><span>× invitati</span><span id="rG">120</span></div>
+        <div class="ln"><span>Buffet dell'aperitivo</span><span>compreso</span></div>
+        <div class="ln"><span>Torta realizzata da zero</span><span>compresa</span></div>
+        <div class="ln"><span>Menù per intolleranze e vegani</span><span>compresi</span></div>
+        <div class="ln"><span>Un matrimonio alla volta</span><span>garantito</span></div>
+        <div class="ln small" id="rx1" style="display:none"><span>Fontane di scintille</span><span>su preventivo</span></div>
+        <div class="ln small" id="rx2" style="display:none"><span>Celebrante per il rito</span><span>su preventivo</span></div>
+        <div class="ln small" id="rx3" style="display:none"><span>Camera degli sposi</span><span>su preventivo</span></div>
+        <hr>
+        <div class="ln tot"><span>TOTALE STIMATO</span><span id="rT"></span></div>
+        <div class="ln small"><span>a persona</span><span>140 €</span></div>
+        <hr>
+        <div class="ln small"><span>Rito civile in loco</span><span>Casa Comunale</span></div>
+        <div class="foot">Grazie, vi aspettiamo al parco.<br>351 984 3006</div>
+        <div class="code"></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== STORY ===== -->
+<section class="sec story" data-pin="story">
+  <div class="wrap">
+    <div class="cols">
+      <div><div class="eyebrow">Chi siamo</div><h2>Una famiglia <em>che fa matrimoni.</em></h2><p>Il Parco dei Poeti è una famiglia di professionisti del matrimonio: Loris e Marzia, con lo staff, seguono ogni aspetto, dal banchetto all'allestimento all'intrattenimento. Il parco è Casa Comunale autorizzata dal Comune di Cellino Attanasio, quindi il rito civile qui ha pieno valore legale. Nel 2021 Canale 5 l'ha scelto, unica location in Abruzzo, per una puntata di Scene da un Matrimonio.</p></div>
+      <div class="ph"><img src="media/festa-960.jpg" alt=""></div>
+    </div>
+    <div class="facts">
+      <div><b data-n="162">0</b><span>recensioni su Matrimonio.com, 5 su 5</span></div>
+      <div><b data-n="300">0</b><span>invitati al massimo nella Sala D'Annunzio</span></div>
+      <div><b data-n="2">0</b><span>sale, un matrimonio alla volta</span></div>
+      <div><b data-n="1">0</b><span>location d'Abruzzo scelta da Scene da un Matrimonio</span></div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== PROOF ===== -->
+<section class="sec proof">
+  <div class="wrap">
+    <div class="head"><div><div class="eyebrow">Sui tovaglioli</div><h2>Chi si è alzato <em>da tavola.</em></h2></div><p>162 recensioni su Matrimonio.com, tutte a cinque stelle.</p></div>
+    <div class="napkins">
+      <div class="nk" style="--r:-1.5deg">Scelta che rifarei mille volte. Sono stati presenti in tutto e per tutto, anche a livello emozionale.<small>Marika · Matrimonio.com, settembre 2026</small></div>
+      <div class="nk" style="--r:1deg">I proprietari, Loris e Marzia, e lo staff sono super gentili. Cibo ottimo e abbondante.<small>Cristian · Matrimonio.com, settembre 2026</small></div>
+      <div class="nk" style="--r:-.6deg">La migliore location per matrimoni a Teramo: dal cibo alla location, non avremmo potuto desiderare di meglio.<small>Marina · Matrimonio.com, settembre 2026</small></div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== ENVELOPE ===== -->
+<section class="env-sec" id="degusta" data-pin="env">
+  <div class="pin">
+    <div class="env-txt" id="envTxt"><div class="eyebrow">L'invito</div><h2>Prima di tutto, <em>venite a vederlo.</em></h2><p>Scorrete, o rompete il sigillo.</p></div>
+    <div class="env" id="env">
+      <div class="back"></div>
+      <div class="letter">
+        <div class="eyebrow">Chiedi la data</div>
+        <h3>Raccontateci il matrimonio, poi venite al parco.</h3>
+        <p>Scriveteci la data e quanti siete: vi richiamiamo per la visita e per costruire il menù insieme.</p>
+        <form action="mailto:info@ilparcodeipoeti.it" method="post" enctype="text/plain">
+          <label>I vostri nomi<input name="nomi" placeholder="Giulia e Marco" required></label>
+          <label>La data, anche indicativa<input name="data" type="month"></label>
+          <label>Invitati<select name="invitati"><option>Fino a 100</option><option selected>100 – 150</option><option>150 – 300</option><option>Non so ancora</option></select></label>
+          <label>La sala<input name="extra" placeholder="D'Annunzio, Leopardi, o ancora da scegliere"></label>
+          <button class="send" type="submit">Chiedi la data</button>
+          <div class="foot">oppure 351 984 3006 · info@ilparcodeipoeti.it · C.da Stampalone 6, Cellino Attanasio (TE)</div>
+        </form>
+      </div>
+      <div class="front"></div>
+      <div class="flap"></div>
+      <button class="seal" id="seal" aria-label="Apri la busta">I</button>
+    </div>
+  </div>
+</section>
+
+<footer>© Il Parco dei Poeti · demo</footer>
+
+<script>
+(function(){
+'use strict';
+var $=function(s,c){return (c||document).querySelector(s)},$$=function(s,c){return [].slice.call((c||document).querySelectorAll(s))};
+function clamp(v,a,b){return Math.max(a,Math.min(b,v))}
+function ease(t){return t<.5?2*t*t:-1+(4-2*t)*t}
+function smooth(t){return t*t*(3-2*t)}
+var MOB=window.matchMedia('(max-width:900px)').matches;
+
+/* ---------- generic pin progress ---------- */
+var pins=$$('[data-pin]').map(function(el){return {el:el,name:el.getAttribute('data-pin'),p:-1}});
+function progressOf(el){var r=el.getBoundingClientRect();var vh=window.innerHeight;var total=r.height-vh;if(total<=0){return clamp(1-(r.top)/vh,0,1);}return clamp(-r.top/total,0,1);}
+function sectionVis(el){var r=el.getBoundingClientRect();var vh=window.innerHeight;return clamp((vh-r.top)/(r.height+vh),0,1);}
+
+/* ---------- STAGE ---------- */
+var scene=$('#scene'),cloth=$('#cloth'),heroTxt=$('#heroTxt'),courses=$$('.course'),dishes=$$('.dish'),menuCard=$('#menuCard'),menuLis=$$('#menuCard li'),steps=$$('#steps i');
+var curCourse=-2;
+function stage(p){
+  // phases: 0-.18 hero (table tilted, cutlery arrive) ; .18-.3 camera to top-down ; .3-1 five courses
+  var setT=smooth(clamp(p/.14,0,1));           // cutlery slide in
+  var tilt=MOB? (58-58*smooth(clamp((p-.16)/.12,0,1))) : (62-62*smooth(clamp((p-.16)/.12,0,1)));
+  var unfold=smooth(clamp((p-.2)/.08,0,1));    // napkin leaves plate
+  var k2=smooth(clamp((p-.18)/.14,0,1));
+  var zoom=MOB? 1+.35*k2 : 1.1+.1*k2;
+  var sy=MOB? 16-10*k2 : 25-19*k2;
+  var sx=MOB?0:4*k2;
+  scene.style.setProperty('--ss',zoom);
+  scene.style.setProperty('--sy',sy+'vh');scene.style.setProperty('--sx',sx+'vw');
+  cloth.style.setProperty('--tilt',tilt+'deg');
+  cloth.style.setProperty('--set',setT);
+  cloth.style.setProperty('--unfold',unfold);
+  cloth.style.setProperty('--wine',smooth(clamp((p-.3)/.1,0,1)));
+  var spin=0;
+  var ci=-1;
+  if(p>=.3){var q=(p-.3)/.7;ci=Math.min(4,Math.floor(q*5));spin=q*5*8;}
+  cloth.style.setProperty('--spin',spin+'deg');
+  heroTxt.style.opacity=clamp(1-(p-.08)/.08,0,1);
+  heroTxt.style.transform='translateY('+(-p*200)+'px)';
+  $('.card3d').style.opacity=setT*(1-k2);
+  if(ci!==curCourse){
+    curCourse=ci;
+    courses.forEach(function(c,i){c.classList.toggle('on',i===ci)});
+    dishes.forEach(function(d,i){d.classList.toggle('on',i===ci);d.classList.toggle('off',i<ci)});
+    menuCard.classList.toggle('on',ci>=0);
+    menuLis.forEach(function(li,i){li.classList.toggle('on',i===ci);li.classList.toggle('done',i<ci)});
+    steps.forEach(function(s,i){s.classList.toggle('on',i<=ci)});
+  }
+}
+
+/* ---------- SHOW: horizontal + embers ---------- */
+var show=$('#show'),track=$('#track'),cv=$('#embers'),ctx=cv.getContext('2d');
+var embers=[];var showVisible=false;
+function measureTrack(){track.style.setProperty('--tw',Math.max(0,track.scrollWidth-window.innerWidth+window.innerWidth*.06)+'px');cv.width=cv.clientWidth;cv.height=cv.clientHeight;}
+function spawn(){return {x:Math.random()*cv.width,y:cv.height+10,r:1+Math.random()*2.4,vy:.4+Math.random()*1.2,vx:(Math.random()-.5)*.6,a:.4+Math.random()*.6,life:0,max:200+Math.random()*300};}
+for(var i=0;i<(MOB?45:110);i++){var e=spawn();e.y=Math.random()*cv.height;embers.push(e);}
+function drawEmbers(){
+  if(!showVisible)return;
+  ctx.clearRect(0,0,cv.width,cv.height);
+  for(var i=0;i<embers.length;i++){var e=embers[i];e.life++;e.y-=e.vy;e.x+=e.vx+Math.sin(e.life*.03)*.3;if(e.y<-10||e.life>e.max){embers[i]=spawn();continue;}
+    var k=1-e.life/e.max;ctx.beginPath();ctx.arc(e.x,e.y,e.r*(0.6+k*.6),0,Math.PI*2);ctx.fillStyle='rgba(255,'+(140+Math.floor(k*80))+','+(60+Math.floor(k*30))+','+(e.a*k)+')';ctx.fill();}
+}
+
+/* ---------- ISOLE ---------- */
+var isles=$$('.isle');
+function isole(v){var n=isles.length;isles.forEach(function(el,i){var t=clamp((v-.22-i*.07)/.14,0,1);el.style.setProperty('--up',smooth(t));});}
+
+/* ---------- FAN ---------- */
+var fan=$('#fan');
+function fanP(v){fan.style.setProperty('--p',smooth(clamp((v-.25)/.35,0,1)));}
+
+/* ---------- STORY ---------- */
+var storyPh=$('.story .ph'),facts=$$('.facts b'),factsDone=false;
+function story(v){storyPh.style.setProperty('--p',clamp((v-.2)/.5,0,1));
+  if(!factsDone&&v>.3){factsDone=true;facts.forEach(function(b){var n=+b.getAttribute('data-n'),t0=performance.now();(function tick(t){var k=smooth(clamp((t-t0)/1400,0,1));var val=Math.round(n*k);b.textContent=b.getAttribute('data-fmt')?val.toLocaleString('it-IT'):val;if(k<1)requestAnimationFrame(tick);})(t0);});}}
+
+/* ---------- ENVELOPE ---------- */
+var env=$('#env'),envTxt=$('#envTxt'),seal=$('#seal'),forced=false;
+function envelope(p){var open=forced?1:smooth(clamp((p-.25)/.25,0,1));var out=forced?1:smooth(clamp((p-.5)/.3,0,1));env.style.setProperty('--p',smooth(clamp(p/.25,0,1)));env.style.setProperty('--open',open);env.style.setProperty('--out',out);envTxt.style.opacity=1-out;}
+seal.addEventListener('click',function(){forced=true;envelope(1);});
+
+/* ---------- CONTO ---------- */
+var guests=$('#guests'),nG=$('#nGuests'),rG=$('#rG'),rT=$('#rT'),pp=140;
+var lines=$$('#receipt .ln');var printed=false,printing=null;
+function fmtEur(n){return n.toLocaleString('it-IT')+' €'}
+function calc(){var g=+guests.value;nG.textContent=g;rG.textContent=g;if(pp)rT.textContent=fmtEur(g*pp);}
+guests.addEventListener('input',calc);calc();
+$$('#extras button').forEach(function(b,i){b.addEventListener('click',function(){b.classList.toggle('on');var row=$('#rx'+(i+1));row.style.display=b.classList.contains('on')?'flex':'none';if(b.classList.contains('on'))setTimeout(function(){row.classList.add('on')},30);});});
+function printReceipt(){if(printed)return;printed=true;var vis=lines.filter(function(l){return l.style.display!=='none'});vis.forEach(function(l,i){setTimeout(function(){l.classList.add('on')},120+i*140);});}
+var conto=$('#conto');
+
+/* ---------- loop ---------- */
+var raf=false;
+function update(){
+  raf=false;
+  var vh=window.innerHeight;
+  pins.forEach(function(pin){
+    var r=pin.el.getBoundingClientRect();
+    if(r.bottom<-vh||r.top>vh*2)return;
+    var p;
+    switch(pin.name){
+      case 'stage':p=progressOf(pin.el);stage(p);break;
+      case 'show':p=progressOf(pin.el);pin.el.style.setProperty('--p',p);showVisible=r.top<vh&&r.bottom>0;$('.nav').classList.toggle('light',r.top<60&&r.bottom>60);break;
+      case 'isole':isole(sectionVis(pin.el));break;
+      case 'fan':fanP(sectionVis(pin.el));break;
+      case 'story':story(sectionVis(pin.el));break;
+      case 'env':envelope(progressOf(pin.el));break;
+    }
+  });
+  var cr=conto.getBoundingClientRect();if(cr.top<vh*.6)printReceipt();
+}
+function onScroll(){if(!raf){raf=true;requestAnimationFrame(update);}}
+window.addEventListener('scroll',onScroll,{passive:true});
+window.addEventListener('resize',function(){MOB=window.matchMedia('(max-width:900px)').matches;measureTrack();onScroll();});
+measureTrack();update();
+(function tick(){drawEmbers();requestAnimationFrame(tick);})();
+window.addEventListener('load',function(){measureTrack();update();});
+})();
+</script>
+</body>
+</html>
